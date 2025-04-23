@@ -34,6 +34,12 @@ Options:
  --no-build-locally
                         Do not build the local images. This is useful for
                           air-gapped environments.
+ --prepare-air-gapped
+                        Prepare the local images for air-gapped environments.
+                          This will build the images and save them to a tarball
+                          that can be imported into an air-gapped environment.
+                          When REMOTE_HOST is set, the tarball will be copied to
+                          the remote host and imported there.
 EOF
 }
 
@@ -53,6 +59,7 @@ REPORT_SELF_HOSTED_ISSUES="${REPORT_SELF_HOSTED_ISSUES:-}"
 SKIP_SSE42_REQUIREMENTS="${SKIP_SSE42_REQUIREMENTS:-}"
 CONTAINER_ENGINE_PODMAN="${CONTAINER_ENGINE_PODMAN:-}"
 NO_BUILD_LOCALLY="${NO_BUILD_LOCALLY:-}"
+PREPARE_AIR_GAPPED="${PREPARE_AIR_GAPPED:-}"
 
 while (($#)); do
   case "$1" in
@@ -76,6 +83,7 @@ while (($#)); do
   --skip-sse42-requirements) SKIP_SSE42_REQUIREMENTS=1 ;;
   --container-engine-podman) CONTAINER_ENGINE_PODMAN=1 ;;
   --no-build-locally) NO_BUILD_LOCALLY=1 ;;
+  --prepare-air-gapped) PREPARE_AIR_GAPPED=1 ;;
   --) ;;
   *)
     echo "Unexpected argument: $1. Use --help for usage information."

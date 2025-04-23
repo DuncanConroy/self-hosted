@@ -1,4 +1,4 @@
-echo "${_group}Building locally $CONTAINER_ENGINE for air-gapped machine ..."
+echo "${_group}Preparing for air-gapped environment ..."
 
 echo ""
 
@@ -10,22 +10,22 @@ execute_on_remote() {
   fi
 }
 
-if [[ -z ${REMOTE_HOST+set} ]]; then
-  echo "REMOTE_HOST not specified. Skipping image export."
-else
-  for image in $($dc config --images|sort|uniq); do
-    echo "Extracting $image with $CONTAINER_ENGINE"
-    echo "Finding image ID for $image"
-    IMAGE_ID=$($CONTAINER_ENGINE images -q --filter=reference="*$image*")
-    if [ -z "$IMAGE_ID" ]; then
-      echo "Failed to find image ID for $image"
-      exit 1
-    fi
-    echo "Exporting $image ($IMAGE_ID) to /tmp/$IMAGE_ID.tar.gz"
+for image in $($dc config --images|sort|uniq); do
+  echo "Extracting $image with $CONTAINER_ENGINE"
+  echo "Finding image ID for $image"
+  IMAGE_ID=$($CONTAINER_ENGINE images -q --filter=reference="*$image*")
+  if [ -z "$IMAGE_ID" ]; then
+    echo "Failed to find image ID for $image"
+    exit 1
+  fi
+  echo "Exporting $image ($IMAGE_ID) to /tmp/$IMAGE_ID.tar.gz"
 
-    $CONTAINER_ENGINE save -o /tmp/$IMAGE_ID.tar $IMAGE_ID
-    tar -C /tmp -czf /tmp/$IMAGE_ID.tar.gz $IMAGE_ID.tar
+  $CONTAINER_ENGINE save -o /tmp/$IMAGE_ID.tar $IMAGE_ID
+  tar -C /tmp -czf /tmp/$IMAGE_ID.tar.gz $IMAGE_ID.tar
 
+  if [[ -z ${REMOTE_HOST+set} ]]; then
+  echo "REMOTE_HOST not specified. Skipping copying to and extraction on remote machine."
+  else
     echo "Copying /tmp/$IMAGE_ID.tar.gz to ${REMOTE_HOST}"
     scp /tmp/$IMAGE_ID.tar.gz "${REMOTE_HOST}":/tmp/$IMAGE_ID.tar.gz
     if [ $? -ne 0 ]; then
@@ -45,8 +45,8 @@ else
     
     echo "Removing /tmp/${IMAGE_ID}.tar from local"
     rm /tmp/${IMAGE_ID}.tar*
+  fi
 done
-fi
 
 echo ""
 echo "Done"
