@@ -31,6 +31,9 @@ Options:
                           self-hosted instance upstream to Sentry.
  --container-engine-podman
                         Use podman as the container engine.
+ --no-build-locally
+                        Do not build the local images. This is useful for
+                          air-gapped environments.
 EOF
 }
 
@@ -49,6 +52,7 @@ SKIP_COMMIT_CHECK="${SKIP_COMMIT_CHECK:-}"
 REPORT_SELF_HOSTED_ISSUES="${REPORT_SELF_HOSTED_ISSUES:-}"
 SKIP_SSE42_REQUIREMENTS="${SKIP_SSE42_REQUIREMENTS:-}"
 CONTAINER_ENGINE_PODMAN="${CONTAINER_ENGINE_PODMAN:-}"
+NO_BUILD_LOCALLY="${NO_BUILD_LOCALLY:-}"
 
 while (($#)); do
   case "$1" in
@@ -71,6 +75,7 @@ while (($#)); do
   --no-report-self-hosted-issues) REPORT_SELF_HOSTED_ISSUES=0 ;;
   --skip-sse42-requirements) SKIP_SSE42_REQUIREMENTS=1 ;;
   --container-engine-podman) CONTAINER_ENGINE_PODMAN=1 ;;
+  --no-build-locally) NO_BUILD_LOCALLY=1 ;;
   --) ;;
   *)
     echo "Unexpected argument: $1. Use --help for usage information."
