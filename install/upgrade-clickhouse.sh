@@ -1,12 +1,12 @@
 echo "${_group}Upgrading Clickhouse ..."
 
+ps_command="$dc ps"
 # First check to see if user is upgrading by checking for existing clickhouse volume
 if [ "$CONTAINER_ENGINE" = "docker" ]; then
   # docker compose needs to be run with the -a flag to show all containers
   ps_command="$ps_command -a"
   build_arg="--build-arg"
 else
-  ps_command="$dc ps"
   build_arg="--podman-build-args"
 fi
 
