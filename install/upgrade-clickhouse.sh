@@ -17,8 +17,8 @@ if $ps_command | grep -q clickhouse; then
   # In order to get to 23.8, we need to first upgrade go from 21.8 -> 22.8 -> 23.3 -> 23.8
   version=$($dc exec clickhouse clickhouse-client -q 'SELECT version()')
   if [[ "$version" == "21.8.13.1.altinitystable" || "$version" == "21.8.12.29.altinitydev.arm" ]]; then
-    if [ "${NO_BUILD_LOCALLY:-}" -eq 1 ]; then
-      echo "Upgrading Clickhouse not supported with --no-build-locally" 
+    if [ ! -z ${NO_BUILD_LOCALLY:-} ]; then
+      echo "(WARN) Skipping clickhouse upgrade, since NO_BUILD_LOCALLY is set. Manual upgrade is required."
     else
       $dc down clickhouse
       $dcb $build_arg BASE_IMAGE=altinity/clickhouse-server:22.8.15.25.altinitystable clickhouse
