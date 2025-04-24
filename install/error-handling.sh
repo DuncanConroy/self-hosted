@@ -4,7 +4,7 @@ if [ -z "${SENTRY_DSN:-}" ]; then
   export SENTRY_DSN='https://19555c489ded4769978daae92f2346ca@self-hosted.getsentry.net/3'
 fi
 
-if [ -z ${NO_BUILD_LOCALLY:-} ]; then
+if [ -z "${NO_BUILD_LOCALLY:-}" ]; then
   $dbuild -t sentry-self-hosted-jq-local --platform="$DOCKER_PLATFORM" jq
 fi
 
