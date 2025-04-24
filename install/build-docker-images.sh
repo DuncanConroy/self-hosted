@@ -12,9 +12,9 @@ if [ -z ${NO_BUILD_LOCALLY:-} ]; then
   echo ""
   echo "Docker images built."
 
-  if [[ "$PREPARE_AIR_GAPPED" -eq 1 ]]; then
-    source install/prepare-air-gapped.sh
-  fi
+    if [[ "$PREPARE_AIR_GAPPED" -eq 1 ]]; then
+      source install/prepare-air-gapped.sh
+    fi
 
   echo "${_endgroup}"
 fi

@@ -10,6 +10,8 @@ execute_on_remote() {
   fi
 }
 
+$dc pull -q
+
 for image in $($dc config --images|sort|uniq); do
   echo "Extracting $image with $CONTAINER_ENGINE"
   echo "Finding image ID for $image"
@@ -20,7 +22,7 @@ for image in $($dc config --images|sort|uniq); do
   fi
   echo "Exporting $image ($IMAGE_ID) to /tmp/$IMAGE_ID.tar.gz"
 
-  $CONTAINER_ENGINE save -o /tmp/$IMAGE_ID.tar $IMAGE_ID
+  $CONTAINER_ENGINE save -o /tmp/$IMAGE_ID.tar $image
   tar -C /tmp -czf /tmp/$IMAGE_ID.tar.gz $IMAGE_ID.tar
 
   if [[ -z ${REMOTE_HOST+set} ]]; then
